@@ -4,7 +4,7 @@ import { Container, Box, Typography, Button, Paper } from "@mui/material";
 import { motion } from "framer-motion";
 import { styled } from "@mui/material/styles";
 import OtpInput from "react-otp-input";
-import CustomerNavbar from "../CustomerNavbar";
+import CustomerNavbar from "../landing-page/CustomerNavbar";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 

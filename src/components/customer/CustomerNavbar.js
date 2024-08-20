@@ -4,6 +4,7 @@ import { AppBar, Toolbar, Typography, Button, Container, Box, Hidden } from '@mu
 import { Home, Info, ContactMail, Login, PersonAdd } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
+import { FaHandMiddleFinger } from 'react-icons/fa';
 
 const CustomerNavbar = () => {
   const StyledAppBar = styled(AppBar)(({ theme }) => ({
@@ -21,7 +22,7 @@ const CustomerNavbar = () => {
             </Typography>
             <Box sx={{ flexGrow: 2, display: 'flex', justifyContent: 'center' }}>
               {/* Hide these buttons on mobile */}
-              <Hidden smDown>
+              <Hidden smDown mdDown>
                 <Button color="inherit" startIcon={<Home />} sx={{ fontFamily: 'Outfit' }}>
                   Home
                 </Button>
@@ -35,9 +36,11 @@ const CustomerNavbar = () => {
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               {/* Always show Login button */}
+              <Hidden smDown mdDown>
               <Button color="inherit" startIcon={<Login />} component={Link} to="/login" sx={{ mr: 1, fontFamily: 'Outfit' }}>
                 Login
               </Button>
+              </Hidden>
               <Button
                 variant="contained"
                 startIcon={<PersonAdd />}

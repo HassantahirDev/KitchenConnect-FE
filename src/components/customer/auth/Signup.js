@@ -1,10 +1,12 @@
-// src/pages/SignUpPage.js
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
-import { Container, Box, Typography, TextField, Button, Paper, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { Container, Box, Typography, TextField, Button, Paper, MenuItem, Select, InputLabel, FormControl, FormHelperText } from '@mui/material';
 import { motion } from 'framer-motion';
 import { styled } from '@mui/material/styles';
 import CustomerNavbar from '../CustomerNavbar';
+import { useForm, Controller } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 // Styled components
 const BackgroundContainer = styled(Box)(({ theme }) => ({
@@ -29,23 +31,38 @@ const PatternOverlay = styled(Box)(({ theme }) => ({
 }));
 
 const FormContainer = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(4),
-  maxWidth: '100%',
-  width: '100%',
-  maxWidth: 400,
-  zIndex: 2,
-  background: '#fff',
-  [theme.breakpoints.down('sm')]: {
-    padding: theme.spacing(3),
-  },
-}));
+    padding: theme.spacing(4),
+    width: '100%', // Default width for all screens
+    zIndex: 2,
+    background: '#fff',
+    marginLeft: 'auto', // Center horizontally
+    marginRight: 'auto', // Center horizontally
+    [theme.breakpoints.up('lg')]: {
+      width: 400, // Width for large screens
+      marginLeft: 0, // Reset margins for large screens
+      marginRight: 0, // Reset margins for large screens
+    },
+    [theme.breakpoints.between('md', 'lg')]: {
+      width: 360, // Width for medium screens
+      marginTop: 110,
+    },
+    [theme.breakpoints.between('sm', 'md')] : {
+        marginTop: 110,
+      width: 320, // Width for small-medium screens
+    },
+    [theme.breakpoints.down('sm')] : {
+        marginTop: 110,
+      padding: theme.spacing(3),
+      width: 230, // Width for small screens
+    },
+  }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
   borderRadius: '20px',
   fontFamily: 'Outfit, sans-serif',
   textTransform: 'none',
   '&:hover': {
-    backgroundColor: '#d76c2d', // Darker shade for hover effect
+    backgroundColor: '#d76c2d',
   },
 }));
 
@@ -59,15 +76,21 @@ const ContentContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
+// Validation schema using yup
+const schema = yup.object().shape({
+  name: yup.string().required('Name is required'),
+  email: yup.string().email('Invalid email format').required('Email is required'),
+  password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
+  role: yup.string().required('Role is required'),
+});
+
 const SignUpPage = () => {
-  const [role, setRole] = React.useState('');
-  const navigate = useNavigate(); // Initialize useNavigate
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(schema),
+  });
+  const navigate = useNavigate();
 
-  const handleRoleChange = (event) => {
-    setRole(event.target.value);
-  };
-
-  const handleSignUp = () => {
+  const onSubmit = (data) => {
     // Handle sign-up logic here
     // On successful sign-up, navigate to the OTP verification page
     navigate('/otp-verification');
@@ -132,91 +155,125 @@ const SignUpPage = () => {
                 component="form"
                 noValidate
                 autoComplete="off"
+                onSubmit={handleSubmit(onSubmit)}
                 sx={{ display: 'flex', flexDirection: 'column' }}
               >
-                <TextField
-                  label="Name"
-                  variant="outlined"
-                  margin="normal"
-                  fullWidth
-                  required
-                  InputProps={{
-                    sx: {
-                      fontFamily: 'Outfit, sans-serif',
-                      fontSize: '1rem',
-                    },
-                  }}
-                  InputLabelProps={{
-                    sx: {
-                      fontFamily: 'Outfit, sans-serif',
-                      fontSize: '1rem',
-                    },
-                  }}
+                <Controller
+                  name="name"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Name"
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
+                      required
+                      error={!!errors.name}
+                      helperText={errors.name?.message}
+                      InputProps={{
+                        sx: {
+                          fontFamily: 'Outfit, sans-serif',
+                          fontSize: '1rem',
+                        },
+                      }}
+                      InputLabelProps={{
+                        sx: {
+                          fontFamily: 'Outfit, sans-serif',
+                          fontSize: '1rem',
+                        },
+                      }}
+                    />
+                  )}
                 />
-                <TextField
-                  label="Email"
-                  variant="outlined"
-                  margin="normal"
-                  fullWidth
-                  required
-                  InputProps={{
-                    sx: {
-                      fontFamily: 'Outfit, sans-serif',
-                      fontSize: '1rem',
-                    },
-                  }}
-                  InputLabelProps={{
-                    sx: {
-                      fontFamily: 'Outfit, sans-serif',
-                      fontSize: '1rem',
-                    },
-                  }}
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Email"
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
+                      required
+                      error={!!errors.email}
+                      helperText={errors.email?.message}
+                      InputProps={{
+                        sx: {
+                          fontFamily: 'Outfit, sans-serif',
+                          fontSize: '1rem',
+                        },
+                      }}
+                      InputLabelProps={{
+                        sx: {
+                          fontFamily: 'Outfit, sans-serif',
+                          fontSize: '1rem',
+                        },
+                      }}
+                    />
+                  )}
                 />
-                <TextField
-                  label="Password"
-                  type="password"
-                  variant="outlined"
-                  margin="normal"
-                  fullWidth
-                  required
-                  InputProps={{
-                    sx: {
-                      fontFamily: 'Outfit, sans-serif',
-                      fontSize: '1rem',
-                    },
-                  }}
-                  InputLabelProps={{
-                    sx: {
-                      fontFamily: 'Outfit, sans-serif',
-                      fontSize: '1rem',
-                    },
-                  }}
+                <Controller
+                  name="password"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Password"
+                      type="password"
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
+                      required
+                      error={!!errors.password}
+                      helperText={errors.password?.message}
+                      InputProps={{
+                        sx: {
+                          fontFamily: 'Outfit, sans-serif',
+                          fontSize: '1rem',
+                        },
+                      }}
+                      InputLabelProps={{
+                        sx: {
+                          fontFamily: 'Outfit, sans-serif',
+                          fontSize: '1rem',
+                        },
+                      }}
+                    />
+                  )}
                 />
-                <FormControl variant="outlined" margin="normal" fullWidth required>
-                  <InputLabel>Role</InputLabel>
-                  <Select
-                    value={role}
-                    onChange={handleRoleChange}
-                    label="Role"
-                    InputProps={{
-                      sx: {
-                        fontFamily: 'Outfit, sans-serif',
-                        fontSize: '1rem',
-                      },
-                    }}
-                    SelectDisplayProps={{
-                      sx: {
-                        fontFamily: 'Outfit, sans-serif',
-                        fontSize: '1rem',
-                      },
-                    }}
-                  >
-                    <MenuItem value="Hostelite">Hostelite</MenuItem>
-                    <MenuItem value="Office Admin">Office Admin</MenuItem>
-                  </Select>
-                </FormControl>
+                <Controller
+                  name="role"
+                  control={control}
+                  render={({ field }) => (
+                    <FormControl variant="outlined" margin="normal" fullWidth required error={!!errors.role}>
+                      <InputLabel>Role</InputLabel>
+                      <Select
+                        {...field}
+                        label="Role"
+                        InputProps={{
+                          sx: {
+                            fontFamily: 'Outfit, sans-serif',
+                            fontSize: '1rem',
+                          },
+                        }}
+                        SelectDisplayProps={{
+                          sx: {
+                            fontFamily: 'Outfit, sans-serif',
+                            fontSize: '1rem',
+                          },
+                        }}
+                      >
+                        <MenuItem value="Hostelite">Hostelite</MenuItem>
+                        <MenuItem value="Office Admin">Office Admin</MenuItem>
+                      </Select>
+                      <FormHelperText>{errors.role?.message}</FormHelperText>
+                    </FormControl>
+                  )}
+                />
                 <StyledButton
-                  type="button"
+                  type="submit"
                   variant="contained"
                   color="secondary"
                   sx={{
@@ -225,7 +282,6 @@ const SignUpPage = () => {
                     mb: 2,
                     fontWeight: 'bold',
                   }}
-                  onClick={handleSignUp} // Handle sign-up click
                 >
                   Sign Up
                 </StyledButton>

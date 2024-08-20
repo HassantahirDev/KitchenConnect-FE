@@ -30,16 +30,28 @@ const PatternOverlay = styled(Box)(({ theme }) => ({
 }));
 
 const FormContainer = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(4),
-  maxWidth: "100%",
-  width: "100%",
-  maxWidth: 400,
-  zIndex: 2,
-  background: "#fff",
-  [theme.breakpoints.down("sm")]: {
-    padding: theme.spacing(3),
-  },
-}));
+    padding: theme.spacing(4),
+    width: '100%', // Default width for all screens
+    zIndex: 2,
+    background: '#fff',
+    marginLeft: 'auto', // Center horizontally
+    marginRight: 'auto', // Center horizontally
+    [theme.breakpoints.up('lg')]: {
+      width: 400, // Width for large screens
+      marginLeft: 0, // Reset margins for large screens
+      marginRight: 0, // Reset margins for large screens
+    },
+    [theme.breakpoints.between('md', 'lg')]: {
+      width: 360, // Width for medium screens
+    },
+    [theme.breakpoints.between('sm', 'md')] : {
+      width: 320, // Width for small-medium screens
+    },
+    [theme.breakpoints.down('sm')] : {
+      padding: theme.spacing(3),
+      width: 260, // Width for small screens
+    },
+  }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
   borderRadius: "20px",

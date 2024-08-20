@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import { styled } from "@mui/material/styles";
 import OtpInput from "react-otp-input";
 import CustomerNavbar from "../CustomerNavbar";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 // Styled components
 const BackgroundContainer = styled(Box)(({ theme }) => ({
@@ -30,28 +32,28 @@ const PatternOverlay = styled(Box)(({ theme }) => ({
 }));
 
 const FormContainer = styled(Paper)(({ theme }) => ({
-    padding: theme.spacing(4),
-    width: '100%', // Default width for all screens
-    zIndex: 2,
-    background: '#fff',
-    marginLeft: 'auto', // Center horizontally
-    marginRight: 'auto', // Center horizontally
-    [theme.breakpoints.up('lg')]: {
-      width: 400, // Width for large screens
-      marginLeft: 0, // Reset margins for large screens
-      marginRight: 0, // Reset margins for large screens
-    },
-    [theme.breakpoints.between('md', 'lg')]: {
-      width: 360, // Width for medium screens
-    },
-    [theme.breakpoints.between('sm', 'md')] : {
-      width: 320, // Width for small-medium screens
-    },
-    [theme.breakpoints.down('sm')] : {
-      padding: theme.spacing(3),
-      width: 260, // Width for small screens
-    },
-  }));
+  padding: theme.spacing(4),
+  width: "100%", // Default width for all screens
+  zIndex: 2,
+  background: "#fff",
+  marginLeft: "auto", // Center horizontally
+  marginRight: "auto", // Center horizontally
+  [theme.breakpoints.up("lg")]: {
+    width: 400, // Width for large screens
+    marginLeft: 0, // Reset margins for large screens
+    marginRight: 0, // Reset margins for large screens
+  },
+  [theme.breakpoints.between("md", "lg")]: {
+    width: 360, // Width for medium screens
+  },
+  [theme.breakpoints.between("sm", "md")]: {
+    width: 320, // Width for small-medium screens
+  },
+  [theme.breakpoints.down("sm")]: {
+    padding: theme.spacing(3),
+    width: 260, // Width for small screens
+  },
+}));
 
 const StyledButton = styled(Button)(({ theme }) => ({
   borderRadius: "20px",
@@ -73,6 +75,27 @@ const ContentContainer = styled(Box)(({ theme }) => ({
 }));
 
 const OtpVerificationPage = () => {
+  const theme = useTheme();
+
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up("lg"));
+
+  let inputWidth, inputHeight, fontSize;
+
+  if (isLargeScreen) {
+    inputWidth = "3rem";
+    inputHeight = "3rem";
+    fontSize = "1.5rem";
+  } else if (isMediumScreen) {
+    inputWidth = "2.5rem";
+    inputHeight = "2.5rem";
+    fontSize = "1.25rem";
+  } else if (isSmallScreen) {
+    inputWidth = "2rem";
+    inputHeight = "2rem";
+    fontSize = "1rem";
+  }
   const [otp, setOtp] = useState("");
 
   const handleOtpChange = (otp) => {
@@ -175,16 +198,16 @@ const OtpVerificationPage = () => {
                   numInputs={4}
                   separator={<span style={{ width: "10px" }}></span>}
                   inputStyle={{
-                    width: "3rem",
-                    height: "3rem",
+                    width: inputWidth,
+                    height: inputHeight,
                     margin: "0 0.5rem",
-                    fontSize: "1.5rem",
+                    fontSize: fontSize,
                     borderRadius: "8px",
                     border: "1px solid #ccc",
                     backgroundColor: "#fafafa",
                   }}
                   focusStyle={{
-                    border: "2px solid #ee8417",
+                    border: `2px solid #ee8417`,
                   }}
                   renderInput={(props) => <input {...props} />}
                 />

@@ -60,4 +60,5 @@ const Sidebar = ({ selected, onClick }) => {
   );
 };
 
-export default Sidebar;
+export default Sidebar; 
+  

@@ -9,12 +9,12 @@ import VerifyOTP from "./components/admin/VerifyOTP";
 import BasicTable from "./components/admin/TableCard";
 import CompleteSignUp from "./components/admin/CompleteSignUp";
 import HosteliteOrdersList from "./components/admin/HosteliteOrdersList";
-import CustomerNavbar from "./components/customer/landing-page/CustomerNavbar";
 import LandingPage from "./components/customer/landing-page/LandingPage";
 import LoginPage from "./components/customer/auth/Login";
 import SignUpPage from "./components/customer/auth/Signup";
 import OtpVerificationPage from "./components/customer/auth/OtpVerificationPage";
 import Menu from "./components/customer/tabs/Menu";
+
 
 function App() {
   return (
@@ -34,7 +34,7 @@ function App() {
         <Route path="/register" element={<SignUpPage />} />
         <Route path="/otp-verification" element={<OtpVerificationPage />} />
         <Route path="/menu" element={<Menu />} />
-        {/* Add more routes as needed */}
+
       </Routes>
     </Router>
   );

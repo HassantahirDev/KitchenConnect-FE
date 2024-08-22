@@ -1,4 +1,3 @@
-// src/pages/LoginPage.js
 import React from "react";
 import {
   Container,
@@ -12,6 +11,9 @@ import { motion } from "framer-motion";
 import { styled } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
 import CustomerNavbar from "../landing-page/CustomerNavbar";
+import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 // Styled components
 const BackgroundContainer = styled(Box)(({ theme }) => ({
@@ -21,19 +23,9 @@ const BackgroundContainer = styled(Box)(({ theme }) => ({
   alignItems: "center",
   padding: "20px",
   position: "relative",
+  overflow: "hidden", // Prevent horizontal scrolling
 }));
 
-// const PatternOverlay = styled(Box)(({ theme }) => ({
-//   position: 'absolute',
-//   top: 0,
-//   left: 0,
-//   width: '100%',
-//   height: '100%',
-//   background: 'url("https://www.toptal.com/designers/subtlepatterns/patterns/dark-tileable.png")',
-//   opacity: 0.1,
-//   zIndex: 1,
-//   backgroundSize: 'cover',
-// }));
 const FormContainer = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
   width: "100%", // Default width for all screens
@@ -77,22 +69,57 @@ const ContentContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-const Image = styled("img")({
-  maxWidth: "100%",
-  height: "auto",
-  borderRadius: "8px",
-});
+// New styled component for the circle
+const PatternCircle = styled(Box)(({ theme }) => ({
+  position: "absolute",
+  bottom: 0,
+  right: 0,
+  width: 350, // Adjusted width
+  height: 350, // Adjusted height
+  borderRadius: "50%",
+  border: "50px solid #fff", // Adjusted border thickness
+  background: "transparent",
+  transform: "translate(50%, 50%)", // Adjusted to ensure part of the circle is visible
+  zIndex: 1, // Ensure it is below other content
+}));
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    // Handle form submission
-    console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      setError("");
+      const response = await axios.post(
+        "http://localhost:3000/auth/login",
+        data, // Use the data directly from the form
+        {
+          withCredentials: true, // Ensure cookies are sent
+        }
+      );
+
+      console.log("Response:", response);
+
+      // Fetch the token from the response headers
+      const token = response.data.token;
+      console.log("Token:", token);
+      // Store the token in local storage
+      localStorage.setItem("token", token);
+
+      // Redirect to the dashboard or another protected route
+      navigate("/menu");
+    } catch (err) {
+      if (err.response && err.response.data) {
+        setError(err.response.data.message);
+      } else {
+        setError("An unexpected error occurred");
+      }
+    }
   };
 
   return (
@@ -172,7 +199,7 @@ const LoginPage = () => {
                 component="form"
                 noValidate
                 autoComplete="off"
-                onSubmit={handleSubmit(onSubmit)}
+                onSubmit={handleSubmit(onSubmit)} // Use handleSubmit with onSubmit function
                 sx={{ display: "flex", flexDirection: "column" }}
               >
                 <TextField
@@ -258,9 +285,28 @@ const LoginPage = () => {
             </FormContainer>
           </motion.div>
         </Container>
+        {/* Add the PatternCircle component */}
+        {/* <PatternCircle /> */}
       </BackgroundContainer>
     </>
   );
 };
 
 export default LoginPage;
+
+
+
+
+// const toggleDrawer = (open) => (event) => {
+//     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+//       return;
+//     }
+//     setDrawerOpen(open);
+//   };
+
+//   <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
+//                 <Sidebar
+//                   selected=""
+//                   onClick={() => setDrawerOpen(false)}
+//                 />
+//               </Drawer>

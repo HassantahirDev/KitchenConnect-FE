@@ -8,7 +8,7 @@ import {
   Card,
   CardContent,
   CardMedia,
-  Paper,
+
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import CustomerNavbar from "../landing-page/CustomerNavbar";

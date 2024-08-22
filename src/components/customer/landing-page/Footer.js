@@ -34,11 +34,13 @@ const Footer = () => {
     <Box
       sx={{
         py: 6,
+        position: 'relative',
         px: 4,
         backgroundColor: "#ee8417",
         color: "#fff",
         textAlign: "center",
         marginTop: "50px",
+        zIndex: '1100',
       }}
     >
       <Grid container spacing={4} justifyContent="center">

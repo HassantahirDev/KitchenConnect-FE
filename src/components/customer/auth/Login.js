@@ -10,7 +10,7 @@ import {
 import { motion } from "framer-motion";
 import { styled } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
-import CustomerNavbar from "../landing-page/CustomerNavbar";
+import CustomerNavbar from "../navbar/CustomerNavbar";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";

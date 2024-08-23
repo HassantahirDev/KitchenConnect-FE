@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { styled } from "@mui/material/styles";
-import CustomerNavbar from "../landing-page/CustomerNavbar";
+import CustomerNavbar from "../navbar/CustomerNavbar";
 import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";

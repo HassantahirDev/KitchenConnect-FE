@@ -1,11 +1,11 @@
 // src/App.js
 import React from "react";
-import CustomerNavbar from "./CustomerNavbar";
-import HeroSection from "./HeroSection";
-import FeaturesSection from "./FeaturesSection";
+import CustomerNavbar from "../navbar/CustomerNavbar";
+import HeroSection from "../landing-page/HeroSection";
+import FeaturesSection from "../landing-page/FeaturesSection";
 import { CssBaseline, Container } from "@mui/material";
-import Testimonials from "./Testimonials";
-import Footer from "./Footer";
+import Testimonials from "../landing-page/Testimonials";
+import Footer from "../footer/Footer";
 
 function LandingPage() {
   return (
@@ -13,6 +13,7 @@ function LandingPage() {
       <CssBaseline />
       <CustomerNavbar />
       <HeroSection />
+     
       <Container maxWidth="lg">
         <FeaturesSection />
       </Container>

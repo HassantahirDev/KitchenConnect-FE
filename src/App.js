@@ -9,12 +9,11 @@ import VerifyOTP from "./components/admin/VerifyOTP";
 import BasicTable from "./components/admin/TableCard";
 import CompleteSignUp from "./components/admin/CompleteSignUp";
 import HosteliteOrdersList from "./components/admin/HosteliteOrdersList";
-import LandingPage from "./components/customer/landing-page/LandingPage";
+import LandingPage from "./components/customer/tabs/Home";
 import LoginPage from "./components/customer/auth/Login";
 import SignUpPage from "./components/customer/auth/Signup";
 import OtpVerificationPage from "./components/customer/auth/OtpVerificationPage";
 import Menu from "./components/customer/tabs/Menu";
-
 
 function App() {
   return (
@@ -28,13 +27,12 @@ function App() {
         <Route path="/add-menu-items" element={<AddMenuItemsForm />} />
         <Route path="/add-monthly-menu" element={<AddMonthlyMenuForm />} />
         <Route path="/complete-sign-up" element={<CompleteSignUp />} />
-        <Route path="/orders/hostelite-orders" element={<HosteliteOrdersList />} />
+        <Route path="/orders/hostelite-orders" element={<HosteliteOrdersList />}/>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<SignUpPage />} />
         <Route path="/otp-verification" element={<OtpVerificationPage />} />
         <Route path="/menu" element={<Menu />} />
-
       </Routes>
     </Router>
   );

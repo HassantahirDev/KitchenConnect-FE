@@ -11,8 +11,9 @@ import {
 
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import CustomerNavbar from "../landing-page/CustomerNavbar";
-import Footer from "../landing-page/Footer";
+import CustomerNavbar from "../navbar/CustomerNavbar";
+import Footer from "../footer/Footer";
+import PriceCard from "../landing-page/PriceCard";
 
 // Mock Data for 10 Days of Menu Items
 const menuItems = [
@@ -178,8 +179,10 @@ const Menu = () => {
           </Typography>
         </LocationBanner>
 
+        <PriceCard/>
+
         {/* Custom Menu Banner */}
-        <CustomMenuBanner>
+        {/* <CustomMenuBanner>
           <Typography
             variant="h5"
             sx={{
@@ -240,7 +243,7 @@ const Menu = () => {
           >
             Create Your Own Menu
           </Button>
-        </CustomMenuBanner>
+        </CustomMenuBanner> */}
 
         {/* Menu Items Day by Day */}
         <Grid container spacing={4}>

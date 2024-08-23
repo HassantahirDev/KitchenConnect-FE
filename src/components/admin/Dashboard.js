@@ -124,7 +124,7 @@ const Dashboard = () => {
           {notifications.map((notification, index) => (
             <NotificationCard
               key={index}
-              message={`${notification?.user?.name} has ordered a menu with a quantity of ${notification.quantity}.`}
+              message={`${notification?.user?.name} has ordered a menu`}
               time={`Created At: ${new Date(notification.createdAt).toLocaleString()}`}
               accept={() => handleAcceptOrder(notification.id)}
               reject={() => alert("Reject functionality not implemented yet.")}

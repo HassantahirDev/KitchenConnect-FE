@@ -49,7 +49,8 @@ const HeroSection = () => {
             px: 4,
             py: 1.5,
             "&:hover": {
-              backgroundColor: "#ee7900", // Slightly darker shade for hover
+              backgroundColor: "#fff",
+              color: "#000", // Slightly darker shade for hover
             },
           }}
         >

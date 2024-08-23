@@ -137,7 +137,7 @@ const CustomerNavbar = () => {
                     icon: <RestaurantMenu />,
                     onClick: (e) => setMenuAnchor(e.currentTarget),
                   },
-                  { label: "Contact", icon: <ContactMail /> },
+                  { label: "Contact", icon: <ContactMail />, link: '/contact-us' },
                 ].map((item, index) => (
                   <Button
                     key={index}

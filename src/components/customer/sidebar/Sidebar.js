@@ -11,7 +11,7 @@ const Sidebar = ({ selected, onClick }) => {
   const menuItems = [
     { text: "Home", path: "/", icon: <HomeIcon /> },
     { text: "Menu", path: "/menu", icon: <MenuIcon /> },
-    { text: "About", path: "/about", icon: <InfoIcon /> },
+    { text: "Contact Us", path: "/contact-us", icon: <InfoIcon /> },
   ];
 
   return (
@@ -33,7 +33,7 @@ const Sidebar = ({ selected, onClick }) => {
               sx={{
                 transition: "all 0.3s ease",
                 "&:hover": {
-                  backgroundColor: "#34495e",
+                  backgroundColor: "#000",
                 },
                 "&.Mui-selected": {
                   backgroundColor: "#e67e22",

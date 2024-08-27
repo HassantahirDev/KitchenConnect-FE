@@ -100,7 +100,7 @@ const VerifyOTP = () => {
       setError("");
   
       await axios.post(
-        "http://localhost:3000/auth/verify-user",
+        "http://192.168.1.5:3000/auth/verify-user",
         { email, otp }
       );
   

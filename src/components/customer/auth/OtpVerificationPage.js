@@ -1,4 +1,3 @@
-// src/pages/OtpVerificationPage.js
 import React, { useState } from "react";
 import { Container, Box, Typography, Button, Paper } from "@mui/material";
 import { motion } from "framer-motion";
@@ -7,6 +6,8 @@ import OtpInput from "react-otp-input";
 import CustomerNavbar from "../navbar/CustomerNavbar";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 // Styled components
 const BackgroundContainer = styled(Box)(({ theme }) => ({
@@ -76,17 +77,25 @@ const ContentContainer = styled(Box)(({ theme }) => ({
 
 const OtpVerificationPage = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { role, email } = location.state || {}; // Retrieve role and email from state
 
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const isMediumScreen = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up("lg"));
-
+  const isExtraLargeScreen = useMediaQuery(theme.breakpoints.between("md", "lg"));
+  
   let inputWidth, inputHeight, fontSize;
-
+  
   if (isLargeScreen) {
     inputWidth = "3rem";
     inputHeight = "3rem";
     fontSize = "1.5rem";
+  } else if (isExtraLargeScreen) {
+    inputWidth = "2.75rem";
+    inputHeight = "2.75rem";
+    fontSize = "1.375rem";
   } else if (isMediumScreen) {
     inputWidth = "2.5rem";
     inputHeight = "2.5rem";
@@ -95,17 +104,46 @@ const OtpVerificationPage = () => {
     inputWidth = "2rem";
     inputHeight = "2rem";
     fontSize = "1rem";
+  } else {
+    inputWidth = "1.5rem";
+    inputHeight = "1.5rem";
+    fontSize = "0.875rem";
   }
+  
+
   const [otp, setOtp] = useState("");
 
   const handleOtpChange = (otp) => {
     setOtp(otp);
   };
 
-  const handleVerify = () => {
-    // Handle OTP verification logic here
-    // For example, navigate to the dashboard or show an error
-    // navigate('/dashboard'); // Example navigation
+  const handleVerify = async () => {
+    try {
+      const response = await axios.post(
+        "http://192.168.1.5:3000/auth/verify-user",
+        {
+          email: email, // Use the email from state
+          otp: otp
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log('response', response.status)
+      if (response.status === 201 && role === "HOSTELITE") {
+        // Handle successful verification, e.g., navigate to a new page
+        navigate('/login'); // Example navigation
+      } else if(response.status === 201 && role === "OFFICE_ADMIN") {
+        navigate('/complete-registration',{
+          state: { email: email }
+        }); // Example navigation
+      }
+    } catch (error) {
+      console.error("Error during OTP verification:", error);
+    }
   };
 
   return (

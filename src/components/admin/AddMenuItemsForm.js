@@ -45,7 +45,7 @@ const AddMenuItemsForm = () => {
     }
     // Fetch available months from API
     axios
-      .get("http://localhost:3000/menu")
+      .get("http://192.168.1.5:3000/menu")
       .then((response) => {
         const monthsFromApi = response.data.map((menu) => ({
           month: menu.month,
@@ -94,7 +94,7 @@ const AddMenuItemsForm = () => {
     e.preventDefault();
     try {
       await axios.post(
-        `http://localhost:3000/menu/daily-menu-items/${menuId}`,
+        `http://192.168.1.5:3000/menu/daily-menu-items/${menuId}`,
         { dailyMenuItems: formData }
       );
       toast.success("Menu items added successfully!"); // Success message

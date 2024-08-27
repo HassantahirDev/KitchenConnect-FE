@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import CustomerNavbar from "../navbar/CustomerNavbar";
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 // Styled components
 const BackgroundContainer = styled(Box)(({ theme }) => ({
@@ -83,8 +83,10 @@ const PatternCircle = styled(Box)(({ theme }) => ({
   zIndex: 1, // Ensure it is below other content
 }));
 
-const LoginPage = () => {
+const CompleteVerification = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const {  email } = location.state || {}; 
   const [error, setError] = useState("");
   const {
     register,
@@ -96,23 +98,19 @@ const LoginPage = () => {
     try {
       setError("");
       const response = await axios.post(
-        "http://192.168.1.5:3000/auth/login",
-        data, // Use the data directly from the form
+        "http://192.168.1.5:3000/auth/complete-sign-up",
+        { ...data, email }, // Include email in the data
         {
           withCredentials: true, // Ensure cookies are sent
         }
       );
 
-      console.log("Response:", response);
-
-      // Fetch the token from the response headers
-      const token = response.data.token;
-      console.log("Token:", token);
-      // Store the token in local storage
-      localStorage.setItem("token", token);
-
+      if (response.status === 201) {
+        navigate("/login");
+      } else {
+        setError(response.data.message);
+      }
       // Redirect to the dashboard or another protected route
-      navigate("/menu");
     } catch (err) {
       if (err.response && err.response.data) {
         setError(err.response.data.message);
@@ -142,40 +140,42 @@ const LoginPage = () => {
               variant="h3"
               sx={{ mb: 2, fontFamily: "Outfit, sans-serif", fontWeight: 700 }}
             >
-              Welcome Back!
+              Almost There!
             </Typography>
             <Typography
               variant="h6"
               sx={{ mb: 4, fontFamily: "Outfit, sans-serif" }}
             >
-              Log in to access your account and enjoy our services. We have a
-              lot in store for you!
+              You’re just one step away from completing your sign-up. Please
+              provide your company name and the number of employees to finalize
+              your registration.
             </Typography>
             <Typography
               variant="body1"
               sx={{ mb: 2, fontFamily: "Outfit, sans-serif" }}
             >
-              <strong>Key Features:</strong>
+              <strong>Next Steps:</strong>
             </Typography>
             <Typography
               variant="body1"
               sx={{ mb: 1, fontFamily: "Outfit, sans-serif" }}
             >
-              • Personalized dashboard
+              • Enter your company name
             </Typography>
             <Typography
               variant="body1"
               sx={{ mb: 1, fontFamily: "Outfit, sans-serif" }}
             >
-              • Real-time updates
+              • Specify the number of employees in your company
             </Typography>
             <Typography
               variant="body1"
               sx={{ mb: 1, fontFamily: "Outfit, sans-serif" }}
             >
-              • 24/7 customer support
+              • Complete your registration to start enjoying our services
             </Typography>
           </ContentContainer>
+
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -193,7 +193,7 @@ const LoginPage = () => {
                   color: "#333",
                 }}
               >
-                Login
+                Complete Your Signup
               </Typography>
               <Box
                 component="form"
@@ -203,17 +203,13 @@ const LoginPage = () => {
                 sx={{ display: "flex", flexDirection: "column" }}
               >
                 <TextField
-                  label="Email"
+                  label="Company Name"
                   variant="outlined"
                   margin="normal"
                   fullWidth
                   required
-                  {...register("email", {
-                    required: "Email is required",
-                    pattern: {
-                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                      message: "Invalid email address",
-                    },
+                  {...register("companyName", {
+                    required: "Company Name is required",
                   })}
                   InputProps={{
                     sx: {
@@ -227,21 +223,21 @@ const LoginPage = () => {
                       fontSize: "1rem",
                     },
                   }}
-                  error={!!errors.email}
-                  helperText={errors.email?.message}
+                  error={!!errors.companyName}
+                  helperText={errors.companyName?.message}
                 />
                 <TextField
-                  label="Password"
-                  type="password"
+                  label="Number of Employees"
+                  type="number"
                   variant="outlined"
                   margin="normal"
                   fullWidth
                   required
-                  {...register("password", {
-                    required: "Password is required",
-                    minLength: {
-                      value: 6,
-                      message: "Password must be at least 6 characters long",
+                  {...register("numberOfEmployees", {
+                    required: "Number of Employees is required",
+                    pattern: {
+                      value: /^[0-9]+$/,
+                      message: "Please enter a valid number",
                     },
                   })}
                   InputProps={{
@@ -256,8 +252,8 @@ const LoginPage = () => {
                       fontSize: "1rem",
                     },
                   }}
-                  error={!!errors.password}
-                  helperText={errors.password?.message}
+                  error={!!errors.numberOfEmployees}
+                  helperText={errors.numberOfEmployees?.message}
                 />
                 <StyledButton
                   type="submit"
@@ -270,16 +266,7 @@ const LoginPage = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  Login
-                </StyledButton>
-                <StyledButton
-                  variant="outlined"
-                  color="inherit"
-                  sx={{
-                    mb: 2,
-                  }}
-                >
-                  Sign Up
+                  Complete Sign Up
                 </StyledButton>
               </Box>
             </FormContainer>
@@ -292,21 +279,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
-
-
-
-
-// const toggleDrawer = (open) => (event) => {
-//     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-//       return;
-//     }
-//     setDrawerOpen(open);
-//   };
-
-//   <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
-//                 <Sidebar
-//                   selected=""
-//                   onClick={() => setDrawerOpen(false)}
-//                 />
-//               </Drawer>
+export default CompleteVerification;

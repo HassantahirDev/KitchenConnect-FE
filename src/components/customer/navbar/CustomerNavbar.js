@@ -162,7 +162,6 @@ const CustomerNavbar = () => {
                   {[
                     { label: "Monthly Menu", link: "/menu" },
                     { label: "Your Order", link: "/menu/starter" },
-                    { label: "Custom Menu", link: "/menu/starter" },
                   ].map((item, index) => (
                     <MenuItem
                       key={index}
@@ -172,9 +171,9 @@ const CustomerNavbar = () => {
                       sx={{ fontFamily: "Outfit", color: "#ffffff" }}
                     >
                       <ListItemIcon>
-                        <Fastfood sx={{ color: "#ffffff" }} />
+                        <Fastfood sx={{ color: "#ffffff", fontFamily: "Outfit" }} />
                       </ListItemIcon>
-                      <Typography>{item.label}</Typography>
+                      <Typography sx={{ fontFamily: "Outfit", color: "#ffffff" }}>{item.label}</Typography>
                     </MenuItem>
                   ))}
                 </StyledMenu>
@@ -223,7 +222,7 @@ const CustomerNavbar = () => {
                         sx={{ fontFamily: "Outfit", color: "#ffffff" }}
                       >
                         <ListItemIcon>{item.icon}</ListItemIcon>
-                        <Typography>{item.label}</Typography>
+                        <Typography sx={{ fontFamily: "Outfit", color: "#ffffff" }}>{item.label}</Typography>
                       </MenuItem>
                     ))}
                   </StyledMenu>

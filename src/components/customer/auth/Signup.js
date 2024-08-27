@@ -18,6 +18,7 @@ import { styled } from "@mui/material/styles";
 import CustomerNavbar from "../navbar/CustomerNavbar";
 import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
+import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 // Styled components
@@ -113,11 +114,36 @@ const SignUpPage = () => {
   });
   const navigate = useNavigate();
 
-  const onSubmit = (data) => {
-    // Handle sign-up logic here
-    // On successful sign-up, navigate to the OTP verification page
-    navigate("/otp-verification");
+  const onSubmit = async (data) => {
+    try {
+      const response = await axios.post(
+        "http://192.168.1.5:3000/auth/sign-up",
+        {
+          name: data.name,
+          email: data.email,
+          password: data.password,
+          role: data.role.toUpperCase(), // Assuming the role should be in uppercase
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      if (response.status === 201) {
+        // Navigate to OTP verification page with role and email in state
+        navigate("/otp-verification", {
+          state: { role: data.role, email: data.email }
+        });
+      } else {
+        console.error("Sign-up failed:", response);
+      }
+    } catch (error) {
+      console.error("Error during sign-up:", error);
+    }
   };
+  
 
   return (
     <>
@@ -135,7 +161,7 @@ const SignUpPage = () => {
             zIndex: 2,
           }}
         >
-          <ContentContainer>
+         <ContentContainer>
             <Typography
               variant="h3"
               sx={{ mb: 2, fontFamily: "Outfit, sans-serif", fontWeight: 700 }}
@@ -313,8 +339,8 @@ const SignUpPage = () => {
                           },
                         }}
                       >
-                        <MenuItem value="Hostelite">Hostelite</MenuItem>
-                        <MenuItem value="Office Admin">Office Admin</MenuItem>
+                        <MenuItem value="HOSTELITE">Hostelite</MenuItem>
+                        <MenuItem value="OFFICE_ADMIN">Office Admin</MenuItem>
                       </Select>
                       <FormHelperText>{errors.role?.message}</FormHelperText>
                     </FormControl>

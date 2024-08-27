@@ -87,7 +87,7 @@ const ContactUsPage = () => {
     try {
       setSuccessMessage("");
       const response = await axios.post(
-        "http://localhost:3000/contact-us",
+        "http://192.168.1.5:3000/contact-us",
         data,
         {
           withCredentials: true,

@@ -122,7 +122,7 @@ const CompleteSignUp = () => {
     try {
       setError("");
       const response = await axios.post(
-        "https://192.168.1.5:3000/auth/complete-sign-up",
+        "http://localhost:3000/auth/complete-sign-up",
         {
             email,
             companyName,

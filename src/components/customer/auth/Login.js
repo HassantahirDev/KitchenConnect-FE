@@ -96,7 +96,7 @@ const LoginPage = () => {
     try {
       setError("");
       const response = await axios.post(
-        "https://192.168.1.5:3000/auth/login",
+        "http://localhost:3000/auth/login",
         data, // Use the data directly from the form
         {
           withCredentials: true, // Ensure cookies are sent

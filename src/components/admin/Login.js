@@ -112,7 +112,7 @@ const Login = () => {
     try {
       setError("");
       const response = await axios.post(
-        "https://192.168.1.5:3000/auth/login",
+        "http://localhost:3000/auth/login",
         {
           email,
           password,

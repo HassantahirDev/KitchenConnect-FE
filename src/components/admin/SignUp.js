@@ -145,7 +145,7 @@ const Signup = () => {
         );
         return;
       }
-        await axios.post("https://192.168.1.5:3000/auth/sign-up", {
+        await axios.post("http://localhost:3000/auth/sign-up", {
         email,
         password,
         name,

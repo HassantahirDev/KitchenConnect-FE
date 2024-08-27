@@ -9,9 +9,9 @@ import {
   CardMedia,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import CustomerNavbar from "../navbar/CustomerNavbar";
-import Footer from "../footer/Footer";
-import PriceCard from "../landing-page/PriceCard";
+import CustomerNavbar from "../../navbar/CustomerNavbar";
+import Footer from "../../footer/Footer";
+import PriceCard from "../../landing-page/PriceCard";
 import axios from "axios";
 
 // Styled Components
@@ -57,7 +57,7 @@ const Menu = () => {
     // Fetch current month's menu from the API
     const fetchMenuItems = async () => {
       try {
-        const response = await axios.post("https://192.168.1.5:3000/menu/get-current-month-menu");
+        const response = await axios.post("http://localhost:3000/menu/get-current-month-menu");
 
         // Add a 'day' property to each menu item based on its position in the array
         const menuWithDays = response.data.map((item, index) => ({

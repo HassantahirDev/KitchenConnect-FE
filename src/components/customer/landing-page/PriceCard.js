@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FaDollarSign, FaCheckCircle, FaUserShield, FaClock, FaThumbsUp } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 // Styled components
 const PriceCardContainer = styled.div`
@@ -88,41 +89,49 @@ const PriceCardButton = styled.button`
 
   &:hover {
     background-color: #000;
-    color: #fff
+    color: #fff;
   }
 `;
 
 // PriceCard Component
 const PriceCard = () => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate('/payment-page');
+  };
+
   return (
     <PriceCardContainer>
       <PriceCardHeader>
-        <PriceCardTitle style={{fontFamily:'Outfit'}}>Dana Pani Monthly Package</PriceCardTitle>
+        <PriceCardTitle style={{ fontFamily: 'Outfit' }}>Dana Pani Monthly Package</PriceCardTitle>
         <PriceCardPrice>
           <PriceCardPriceIcon />
-          <span style={{fontFamily:'Outfit'}}>8,000</span>
+          <span style={{ fontFamily: 'Outfit' }}>8,000</span>
         </PriceCardPrice>
       </PriceCardHeader>
       <PriceCardBody>
         <PriceCardFeatures>
-          <PriceCardFeatureItem style={{fontFamily:'Outfit'}}>
+          <PriceCardFeatureItem style={{ fontFamily: 'Outfit' }}>
             <FeatureIcon><FaCheckCircle /></FeatureIcon>
             Unlimited Orders
           </PriceCardFeatureItem>
-          <PriceCardFeatureItem style={{fontFamily:'Outfit'}}>
+          <PriceCardFeatureItem style={{ fontFamily: 'Outfit' }}>
             <FeatureIcon><FaUserShield /></FeatureIcon>
             Secure Payment
-          </PriceCardFeatureItem >
-          <PriceCardFeatureItem style={{fontFamily:'Outfit'}}>
+          </PriceCardFeatureItem>
+          <PriceCardFeatureItem style={{ fontFamily: 'Outfit' }}>
             <FeatureIcon><FaClock /></FeatureIcon>
             24/7 Support
           </PriceCardFeatureItem>
-          <PriceCardFeatureItem style={{fontFamily:'Outfit'}}>
+          <PriceCardFeatureItem style={{ fontFamily: 'Outfit' }}>
             <FeatureIcon><FaThumbsUp /></FeatureIcon>
             High Satisfaction
           </PriceCardFeatureItem>
-        </PriceCardFeatures >
-        <PriceCardButton style={{fontFamily:'Outfit'}}>Subscribe</PriceCardButton>
+        </PriceCardFeatures>
+        <PriceCardButton style={{ fontFamily: 'Outfit' }} onClick={handleClick}>
+          Subscribe
+        </PriceCardButton>
       </PriceCardBody>
     </PriceCardContainer>
   );

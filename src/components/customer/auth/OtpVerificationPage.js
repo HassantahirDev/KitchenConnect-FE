@@ -120,7 +120,7 @@ const OtpVerificationPage = () => {
   const handleVerify = async () => {
     try {
       const response = await axios.post(
-        "https://192.168.1.5:3000/auth/verify-user",
+        "http://localhost:3000/auth/verify-user",
         {
           email: email, // Use the email from state
           otp: otp

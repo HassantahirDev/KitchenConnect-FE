@@ -56,7 +56,7 @@ const Dashboard = () => {
 
     // Fetch today's menu item
     axios
-      .post("https://192.168.1.5:3000/menu/get-todays-menu-item")
+      .post("http://localhost:3000/menu/get-todays-menu-item")
       .then((response) => {
         setTodaysMeal(response.data);
       })
@@ -64,7 +64,7 @@ const Dashboard = () => {
 
     // Fetch tomorrow's menu item
     axios
-      .post("https://192.168.1.5:3000/menu/get-tomorrows-menu-item")
+      .post("http://localhost:3000/menu/get-tomorrows-menu-item")
       .then((response) => {
         setTomorrowsMeal(response.data);
       })
@@ -72,7 +72,7 @@ const Dashboard = () => {
 
     // Fetch all orders (notifications)
     axios
-      .post("https://192.168.1.5:3000/order/get-all-orders")
+      .post("http://localhost:3000/order/get-all-orders")
       .then((response) => {
         setNotifications(response.data);
       })
@@ -84,7 +84,7 @@ const Dashboard = () => {
   
     axios
       .post(
-        "https://192.168.1.5:3000/order/accept-order",
+        "http://localhost:3000/order/accept-order",
         { orderId },
         {
           headers: {

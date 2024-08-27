@@ -13,9 +13,10 @@ import LandingPage from "./components/customer/tabs/Home";
 import LoginPage from "./components/customer/auth/Login";
 import SignUpPage from "./components/customer/auth/Signup";
 import OtpVerificationPage from "./components/customer/auth/OtpVerificationPage";
-import Menu from "./components/customer/tabs/Menu";
+import Menu from "./components/customer/tabs/Menu/Menu";
 import ContactUsPage from "./components/customer/tabs/ContactUs";
 import CompleteVerification from "./components/customer/auth/CompleteVerification";
+import PaymentPage from "./components/customer/payment/Payment";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
         <Route path="/otp-verification" element={<OtpVerificationPage />} />
         <Route path="/menu" element={<Menu />} />
         <Route path="/contact-us" element={<ContactUsPage />} />
+        <Route path="/payment-page" element={<PaymentPage/>} />
       </Routes>
     </Router>
   );

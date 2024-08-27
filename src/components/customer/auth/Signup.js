@@ -117,7 +117,7 @@ const SignUpPage = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.5:3000/auth/sign-up",
+        "https://192.168.1.5:3000/auth/sign-up",
         {
           name: data.name,
           email: data.email,

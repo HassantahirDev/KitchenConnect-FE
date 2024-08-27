@@ -17,7 +17,7 @@ const HosteliteOrdersList = () => {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const response = await fetch("http://192.168.1.5:3000/order/hostelite-orders", {
+        const response = await fetch("https://192.168.1.5:3000/order/hostelite-orders", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

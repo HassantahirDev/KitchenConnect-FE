@@ -67,7 +67,7 @@ const BasicTable = () => {
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          "http://192.168.1.5:3000/menu/get-current-month-menu"
+          "https://192.168.1.5:3000/menu/get-current-month-menu"
         ); // Replace with your API endpoint
 
         // Ensure the response data is an array before setting rows

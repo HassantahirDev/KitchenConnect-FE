@@ -28,7 +28,7 @@ const AddMonthlyMenuForm = () => {
       const token = localStorage.getItem("token");
 
       // Send the formattedData object with token in headers
-      await axios.post(`http://192.168.1.5:3000/menu/`, formattedData, {
+      await axios.post(`https://192.168.1.5:3000/menu/`, formattedData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

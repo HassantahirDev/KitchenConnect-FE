@@ -9,62 +9,53 @@ import {
   Backdrop,
   CircularProgress,
   CardMedia,
+  CardContent,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import CustomerNavbar from "../../navbar/CustomerNavbar";
 import { useTheme } from "@mui/material/styles";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Rating from "@mui/lab/Rating"; // Import Rating component
 
 const OrdersPage = () => {
-    const theme = useTheme();
-    const navigate = useNavigate(); // Use the useNavigate hook
-    const [orders, setOrders] = useState({
-      todaysOrders: [],
-      delivered: [],
-      future: [],
-    });
-    const [loading, setLoading] = useState(true);
-  
-    useEffect(() => {
-      const fetchOrders = async () => {
-        try {
-          const token = localStorage.getItem("token");
-          if (!token) {
-            navigate("/login"); // Redirect to login if no token
-            return;
-          }
-  
-          const response = await axios.post(
-            "http://localhost:3000/order/user",
-            {}, // This is the request body, which is empty in this case
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          setOrders(response.data);
-        } catch (error) {
-          console.error("Error fetching orders:", error);
-        } finally {
-          setLoading(false);
+  const theme = useTheme();
+  const navigate = useNavigate();
+  const [orders, setOrders] = useState({
+    todaysOrders: [],
+    delivered: [],
+    future: [],
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          navigate("/login"); // Redirect to login if no token
+          return;
         }
-      };
-  
-      fetchOrders();
-    }, [navigate]); // Add navigate to dependency array
-  
 
-  const handleDeliveryStatus = (orderId) => {
-    // Handle showing delivery status logic here
-    alert(`Showing delivery status for order ${orderId}`);
-  };
+        const response = await axios.post(
+          "http://localhost:3000/order/user",
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setOrders(response.data);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleMarkAsUnavailable = (orderId) => {
-    // Handle marking order as unavailable logic here
-    alert(`Marking order ${orderId} as unavailable`);
-  };
+    fetchOrders();
+  }, [navigate]);
 
   // Ensure the orders object has arrays defined, even if they are empty
   const todaysOrders = orders.todaysOrders || [];
@@ -75,7 +66,6 @@ const OrdersPage = () => {
     <>
       <CustomerNavbar />
 
-      {/* Full-Screen Loader */}
       <Backdrop
         open={loading}
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -83,7 +73,6 @@ const OrdersPage = () => {
         <CircularProgress color="inherit" />
       </Backdrop>
 
-      {/* Main Content */}
       <Box sx={{ py: 8, px: 4 }}>
         <Typography
           variant="h4"
@@ -99,7 +88,6 @@ const OrdersPage = () => {
         </Typography>
 
         <Grid container spacing={4}>
-          {/* Order Statistics */}
           <Grid item xs={12} sm={4}>
             <Paper
               sx={{
@@ -167,7 +155,7 @@ const OrdersPage = () => {
                 variant="h4"
                 sx={{ fontFamily: "Outfit", fontWeight: "bold" }}
               >
-                {futureOrders.length+1}
+                {futureOrders.length}
               </Typography>
             </Paper>
           </Grid>
@@ -208,6 +196,7 @@ const OrdersPage = () => {
                     >
                       Delivering today
                     </Typography>
+
                     <Button
                       variant="contained"
                       sx={{
@@ -217,7 +206,6 @@ const OrdersPage = () => {
                         backgroundColor: "grey",
                         fontFamily: "Outfit",
                       }}
-                    //   onClick={() => handleDeliveryStatus(order.id)}
                     >
                       {order.delivery.status}
                     </Button>
@@ -232,11 +220,80 @@ const OrdersPage = () => {
                         fontfamily: "Outfit",
                         "&:hover": {
                           borderColor: "#ee8417",
-                          color: "#fff", // Change text color on hover if needed
-                          backgroundColor: "#ee8417", // Change background color on hover if needed
+                          color: "#fff",
+                          backgroundColor: "#ee8417",
                         },
                       }}
-                    //   onClick={() => handleMarkAsUnavailable(order.id)}
+                    >
+                      Mark as Unavailable
+                    </Button>
+                  </Paper>
+                </motion.div>
+              ))}
+            </Box>
+          </Grid>
+
+          {/* Future Orders */}
+          <Grid item xs={12} sm={4}>
+            <Typography
+              variant="h6"
+              sx={{ mb: 2, fontFamily: "Outfit", textAlign: "center" }}
+            >
+              Upcoming Orders
+            </Typography>
+            <Box>
+              {futureOrders.map((order) => (
+                <motion.div
+                  key={order.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Paper sx={{ mb: 2, p: 2, textAlign: "center" }}>
+                    <CardMedia
+                      component="img"
+                      height="180"
+                      image={order.dailyMenu.picture}
+                      alt={order.dailyMenu.name}
+                    />
+                    <Typography variant="body1" sx={{ fontFamily: "Outfit" }}>
+                      {order.dailyMenu.name}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ fontFamily: "Outfit", color: "gray" }}
+                    >
+                      Delivering on{" "}
+                      {new Date(order.dailyMenu.date).toLocaleDateString()}
+                    </Typography>
+
+                    <Button
+                      variant="contained"
+                      sx={{
+                        mt: 2,
+                        mr: 1,
+                        borderRadius: "25px",
+                        backgroundColor: "grey",
+                        fontFamily: "Outfit",
+                      }}
+                    >
+                      {order.delivery.status}
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      sx={{
+                        mt: 2,
+                        ml: 1,
+                        borderColor: "#ee8417",
+                        color: "#ee8417",
+                        borderRadius: "25px",
+                        fontfamily: "Outfit",
+                        "&:hover": {
+                          borderColor: "#ee8417",
+                          color: "#fff",
+                          backgroundColor: "#ee8417",
+                        },
+                      }}
                     >
                       Mark as Unavailable
                     </Button>
@@ -277,11 +334,25 @@ const OrdersPage = () => {
                     >
                       Delivered on{" "}
                       {order.delivery?.updatedAt
-                        ? new Date(
-                            order.dailyMenu.date
-                          ).toLocaleDateString()
+                        ? new Date(order.dailyMenu.date).toLocaleDateString()
                         : "N/A"}
                     </Typography>
+                    <CardContent>
+                      <Typography sx={{ fontFamily: "Outfit" }}>
+                        Rate your rider
+                      </Typography>
+                      <Rating
+                        name={`rating-${order.id}`}
+                        value={order.riderRating || 0} // Show the rated value
+                        readOnly={order.riderRating !== undefined} // Read-only if already rated
+                        onChange={(event, newValue) => {
+                          // Handle rating change
+                          console.log(
+                            `Rated ${newValue} stars for order ${order.id}`
+                          );
+                        }}
+                      />
+                    </CardContent>
                     <Button
                       variant="contained"
                       sx={{
@@ -294,84 +365,8 @@ const OrdersPage = () => {
                           backgroundColor: "darkgreen",
                         },
                       }}
-                    //   onClick={() => handleDeliveryStatus(order.id)}
                     >
                       {order.delivery.status}
-                    </Button>
-                  </Paper>
-                </motion.div>
-              ))}
-            </Box>
-          </Grid>
-
-          {/* Future Orders */}
-          <Grid item xs={12} sm={4}>
-            <Typography
-              variant="h6"
-              sx={{ mb: 2, fontFamily: "Outfit", textAlign: "center" }}
-            >
-              Upcoming Deliveries
-            </Typography>
-            <Box>
-              {futureOrders.map((order) => (
-                <motion.div
-                  key={order.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <Paper sx={{ mb: 2, p: 2, textAlign: "center" }}>
-                    <CardMedia
-                      component="img"
-                      height="180"
-                      image={order.dailyMenu.picture}
-                      alt={order.dailyMenu.name}
-                    />
-                    <Typography variant="body1" sx={{ fontFamily: "Outfit" }}>
-                      {order.dailyMenu.name}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{ fontFamily: "Outfit", color: "gray" }}
-                    >
-                      Upcoming on{" "}
-                      {order.delivery?.updatedAt
-                        ? new Date(
-                            order.dailyMenu.date
-                          ).toLocaleDateString()
-                        : "N/A"}
-                    </Typography>
-                    <Button
-                      variant="contained"
-                      sx={{
-                        mt: 2,
-                        mr: 1,
-                        backgroundColor: "grey",
-                        borderRadius: "25px",
-                        fontFamily: "Outfit",
-                      }}
-                      
-                    >
-                      {order.delivery.status}
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      sx={{
-                        mt: 2,
-                        ml: 1,
-                        borderColor: "#ee8417",
-                        color: "#ee8417",
-                        borderRadius: "25px",
-                        fontfamily: "Outfit",
-                        "&:hover": {
-                          borderColor: "#ee8417",
-                          color: "#fff", // Change text color on hover if needed
-                          backgroundColor: "#ee8417", // Change background color on hover if needed
-                        },
-                      }}
-                     
-                    >
-                      Mark as Unavailable
                     </Button>
                   </Paper>
                 </motion.div>
@@ -379,8 +374,7 @@ const OrdersPage = () => {
             </Box>
           </Grid>
         </Grid>
-        <Divider sx={{ my: 4 }} />
-
+        <Divider />
         {/* Call to Action */}
         <Box sx={{ textAlign: "center", mt: 4 }}>
           <Typography

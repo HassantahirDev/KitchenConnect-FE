@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Container,
@@ -31,43 +31,40 @@ const BackgroundContainer = styled(Box)(({ theme }) => ({
   position: "relative",
 }));
 
-const PatternOverlay = styled(Box)(({ theme }) => ({
+const PatternOverlay = styled(Box)({
   position: "absolute",
   top: 0,
   left: 0,
   width: "100%",
   height: "100%",
-  background:
-    'url("https://www.toptal.com/designers/subtlepatterns/patterns/dark-tileable.png")',
+  background: 'url("https://www.toptal.com/designers/subtlepatterns/patterns/dark-tileable.png")',
   opacity: 0.1,
   zIndex: 1,
   backgroundSize: "cover",
-}));
+});
 
 const FormContainer = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
-  width: "100%", // Default width for all screens
+  width: "100%",
   zIndex: 2,
   background: "#fff",
-  marginLeft: "auto", // Center horizontally
-  marginRight: "auto", // Center horizontally
+  margin: "auto",
   [theme.breakpoints.up("lg")]: {
-    width: 400, // Width for large screens
-    marginLeft: 0, // Reset margins for large screens
-    marginRight: 0, // Reset margins for large screens
+    width: 400,
+    margin: 0,
   },
   [theme.breakpoints.between("md", "lg")]: {
-    width: 360, // Width for medium screens
+    width: 360,
     marginTop: 110,
   },
   [theme.breakpoints.between("sm", "md")]: {
+    width: 320,
     marginTop: 110,
-    width: 320, // Width for small-medium screens
   },
   [theme.breakpoints.down("sm")]: {
-    marginTop: 110,
+    width: 230,
     padding: theme.spacing(3),
-    width: 230, // Width for small screens
+    marginTop: 110,
   },
 }));
 
@@ -93,28 +90,20 @@ const ContentContainer = styled(Box)(({ theme }) => ({
 // Validation schema using yup
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
-  email: yup
-    .string()
-    .email("Invalid email format")
-    .required("Email is required"),
-  password: yup
-    .string()
-    .min(6, "Password must be at least 6 characters")
-    .required("Password is required"),
+  email: yup.string().email("Invalid email format").required("Email is required"),
+  password: yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
   role: yup.string().required("Role is required"),
 });
 
 const SignUpPage = () => {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const [loading, setLoading] = useState(false);
+  const { control, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
   });
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
+    setLoading(true);
     try {
       const response = await axios.post(
         "http://localhost:3000/auth/sign-up",
@@ -122,7 +111,7 @@ const SignUpPage = () => {
           name: data.name,
           email: data.email,
           password: data.password,
-          role: data.role.toUpperCase(), // Assuming the role should be in uppercase
+          role: data.role.toUpperCase(),
         },
         {
           headers: {
@@ -130,20 +119,20 @@ const SignUpPage = () => {
           },
         }
       );
-  
+
       if (response.status === 201) {
-        // Navigate to OTP verification page with role and email in state
         navigate("/otp-verification", {
-          state: { role: data.role, email: data.email }
+          state: { role: data.role, email: data.email },
         });
       } else {
         console.error("Sign-up failed:", response);
       }
     } catch (error) {
       console.error("Error during sign-up:", error);
+    } finally {
+      setLoading(false);
     }
   };
-  
 
   return (
     <>
@@ -161,42 +150,23 @@ const SignUpPage = () => {
             zIndex: 2,
           }}
         >
-         <ContentContainer>
-            <Typography
-              variant="h3"
-              sx={{ mb: 2, fontFamily: "Outfit, sans-serif", fontWeight: 700 }}
-            >
+          <ContentContainer>
+            <Typography variant="h3" sx={{ mb: 2, fontFamily: "Outfit, sans-serif", fontWeight: 700 }}>
               Join Us!
             </Typography>
-            <Typography
-              variant="h6"
-              sx={{ mb: 4, fontFamily: "Outfit, sans-serif" }}
-            >
-              Sign up to start using our services and become a part of our
-              community!
+            <Typography variant="h6" sx={{ mb: 4, fontFamily: "Outfit, sans-serif" }}>
+              Sign up to start using our services and become a part of our community!
             </Typography>
-            <Typography
-              variant="body1"
-              sx={{ mb: 2, fontFamily: "Outfit, sans-serif" }}
-            >
+            <Typography variant="body1" sx={{ mb: 2, fontFamily: "Outfit, sans-serif" }}>
               <strong>Why Choose Us?</strong>
             </Typography>
-            <Typography
-              variant="body1"
-              sx={{ mb: 1, fontFamily: "Outfit, sans-serif" }}
-            >
+            <Typography variant="body1" sx={{ mb: 1, fontFamily: "Outfit, sans-serif" }}>
               • Personalized dashboard
             </Typography>
-            <Typography
-              variant="body1"
-              sx={{ mb: 1, fontFamily: "Outfit, sans-serif" }}
-            >
+            <Typography variant="body1" sx={{ mb: 1, fontFamily: "Outfit, sans-serif" }}>
               • Real-time updates
             </Typography>
-            <Typography
-              variant="body1"
-              sx={{ mb: 1, fontFamily: "Outfit, sans-serif" }}
-            >
+            <Typography variant="body1" sx={{ mb: 1, fontFamily: "Outfit, sans-serif" }}>
               • 24/7 customer support
             </Typography>
           </ContentContainer>
@@ -210,12 +180,7 @@ const SignUpPage = () => {
               <Typography
                 variant="h4"
                 align="center"
-                sx={{
-                  mb: 3,
-                  fontFamily: "Outfit, sans-serif",
-                  fontWeight: 700,
-                  color: "#333",
-                }}
+                sx={{ mb: 3, fontFamily: "Outfit, sans-serif", fontWeight: 700, color: "#333" }}
               >
                 Sign Up
               </Typography>
@@ -332,12 +297,6 @@ const SignUpPage = () => {
                             fontSize: "1rem",
                           },
                         }}
-                        SelectDisplayProps={{
-                          sx: {
-                            fontFamily: "Outfit, sans-serif",
-                            fontSize: "1rem",
-                          },
-                        }}
                       >
                         <MenuItem value="HOSTELITE">Hostelite</MenuItem>
                         <MenuItem value="OFFICE_ADMIN">Office Admin</MenuItem>
@@ -350,21 +309,15 @@ const SignUpPage = () => {
                   type="submit"
                   variant="contained"
                   color="secondary"
-                  sx={{
-                    backgroundColor: "#ee8417",
-                    mt: 3,
-                    mb: 2,
-                    fontWeight: "bold",
-                  }}
+                  sx={{ backgroundColor: "#ee8417", mt: 3, mb: 2, fontWeight: "bold" }}
+                  disabled={loading}
                 >
-                  Sign Up
+                  {loading ? "Signing Up..." : "Sign Up"}
                 </StyledButton>
                 <StyledButton
                   variant="outlined"
                   color="inherit"
-                  sx={{
-                    mb: 2,
-                  }}
+                  sx={{ mb: 2 }}
                 >
                   Login
                 </StyledButton>

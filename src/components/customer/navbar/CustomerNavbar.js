@@ -27,6 +27,8 @@ import {
 import { styled } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 import Sidebar from "../sidebar/Sidebar";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 const StyledMenu = styled(Menu)(({ theme }) => ({
   "& .MuiPaper-root": {
@@ -59,9 +61,27 @@ const CustomerNavbar = () => {
   const [profileAnchor, setProfileAnchor] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState({ name: "", avatar: "" });
 
   useEffect(() => {
+    const fetchUserData = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          // Extract user ID from token (assuming JWT format)
+          const decodedToken = jwtDecode(token);
+          const userId = decodedToken.userId;
+
+          const response = await axios.get(`http://localhost:3000/users/${userId}`);
+          setUser(response.data);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+
     setIsAuthenticated(!!localStorage.getItem("token"));
+    fetchUserData();
   }, []);
 
   const toggleDrawer = (open) => (event) => {
@@ -161,7 +181,7 @@ const CustomerNavbar = () => {
                 >
                   {[
                     { label: "Monthly Menu", link: "/menu" },
-                    { label: "Your Order", link: "/menu/starter" },
+                    { label: "Your Order", link: "/your-orders" },
                   ].map((item, index) => (
                     <MenuItem
                       key={index}
@@ -184,15 +204,23 @@ const CustomerNavbar = () => {
               {isAuthenticated ? (
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                   <Avatar
+                    src={user.avatar || ""}
                     onClick={(e) => setProfileAnchor(e.currentTarget)}
                     sx={{
-                      backgroundColor: "#fff",
-                      color: "#000",
+                      backgroundColor: user.avatar ? "transparent" : "#fff",
+                      color: user.avatar ? "transparent" : "#000",
                       cursor: "pointer",
                       borderRadius: "50%",
+                      width: 40,
+                      height: 40,
+                      fontSize: 18,
+                      fontFamily: "Outfit",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
                     }}
                   >
-                    U
+                    {!user.avatar && user.name.charAt(0).toUpperCase()}
                   </Avatar>
                   <StyledMenu
                     anchorEl={profileAnchor}

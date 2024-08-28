@@ -7,6 +7,13 @@ import {
   Card,
   CardContent,
   CardMedia,
+  Button,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  CircularProgress,
+  Backdrop,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import CustomerNavbar from "../../navbar/CustomerNavbar";
@@ -30,9 +37,6 @@ const LocationBanner = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down("sm")]: {
     height: "150px",
   },
-  [theme.breakpoints.up("md")]: {
-    height: "200px",
-  },
 }));
 
 const MenuItemCard = styled(Card)(({ theme }) => ({
@@ -46,31 +50,50 @@ const MenuItemCard = styled(Card)(({ theme }) => ({
   },
 }));
 
+const WeekSelect = styled(Select)(({ theme }) => ({
+  backgroundColor: "#ee8417",
+  color: "#FFFFFF",
+  "& .MuiSelect-select": {
+    display: "flex",
+    alignItems: "center",
+  },
+  "& .MuiSelect-icon": {
+    color: "#FFFFFF",
+  },
+  "& .MuiOutlinedInput-notchedOutline": {
+    borderColor: "#ee8417",
+  },
+  "&:hover .MuiOutlinedInput-notchedOutline": {
+    borderColor: "#e67e22",
+  },
+}));
+
 const Menu = () => {
-  const [location, setLocation] = useState("");
-  const [menuItems, setMenuItems] = useState([]); // State to hold menu items
+  const [location, setLocation] = useState("TDC, Johar Town Lahore");
+  const [menuItems, setMenuItems] = useState([]);
+  const [currentWeek, setCurrentWeek] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Mock function to get user location (In a real app, use geolocation API)
-    setLocation("TDC, Johar Town Lahore");
-
-    // Fetch current month's menu from the API
     const fetchMenuItems = async () => {
       try {
         const response = await axios.post("http://localhost:3000/menu/get-current-month-menu");
-
-        // Add a 'day' property to each menu item based on its position in the array
-        const menuWithDays = response.data.map((item, index) => ({
+        const weeks = Array.from({ length: 5 }, () => []);
+        response.data.forEach((item, index) => {
+          const week = Math.floor(index / 7);
+          weeks[week].push({ ...item, week: week + 1, day: (index % 7) + 1 });
+        });
+        if (weeks[4].length === 0) weeks[4] = response.data.slice(28).map((item, index) => ({
           ...item,
-          day: index + 1, // Assign day starting from 1
+          week: 5,
+          day: index + 1,
         }));
-      
-        setMenuItems(menuWithDays); // Set menu items with day numbers
+        setMenuItems(weeks);
+        setLoading(false); // Set loading to false once data is fetched
       } catch (error) {
         console.error("Error fetching menu items:", error);
       }
     };
-
     fetchMenuItems();
   }, []);
 
@@ -78,17 +101,12 @@ const Menu = () => {
     <>
       <CustomerNavbar />
       <Container maxWidth="lg">
-        {/* Location Banner */}
         <LocationBanner>
           <Typography
             variant="h4"
             sx={{
               fontFamily: "Outfit, sans-serif",
-              fontSize: {
-                xs: "0.9rem", // Smallest screens
-                sm: "1.225rem", // Small screens
-                md: "1.4rem", // Medium screens
-              },
+              fontSize: { xs: "0.9rem", sm: "1.225rem", md: "1.4rem" },
             }}
           >
             Delivering to {location}
@@ -97,35 +115,52 @@ const Menu = () => {
 
         <PriceCard />
 
-        {/* Grid for menu items */}
+        <Typography sx={{ fontFamily: "Outfit" }}>Select Week</Typography>
+        <FormControl fullWidth variant="outlined" sx={{ mb: 4 }}>
+          <InputLabel id="week-select-label"></InputLabel>
+          <WeekSelect
+            labelId="week-select-label"
+            value={currentWeek}
+            onChange={(e) => setCurrentWeek(e.target.value)}
+          >
+            {[1, 2, 3, 4, 5].map((week) => (
+              <MenuItem key={week} value={week} sx={{ fontFamily: "Outfit" }}>
+                Week {week}
+              </MenuItem>
+            ))}
+          </WeekSelect>
+        </FormControl>
+
         <Grid container spacing={3}>
-          {menuItems.map((item, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
+          {menuItems[currentWeek - 1]?.map((item) => (
+            <Grid item xs={12} sm={6} md={4} key={item.day}>
               <MenuItemCard>
-                <CardMedia
-                  component="img"
-                  height="140"
-                  image={item.picture}
-                  alt={item.name}
-                />
+                <CardMedia component="img" height="140" image={item.picture} alt={item.name} />
                 <CardContent>
-                  <Typography variant="h6" component="div" sx={{fontFamily: "Outfit"}}>
-                  Day: {item.day}: {item.name}
+                  <Typography variant="h6" component="div" sx={{ fontFamily: "Outfit" }}>
+                    Day {item.day}: {item.name}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{fontFamily: "Outfit"}}>
+                  <Typography variant="body2" color="text.secondary" sx={{ fontFamily: "Outfit" }}>
                     Ingredients: {item.ingredients}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{fontFamily: "Outfit"}}>
+                  <Typography variant="body2" color="text.secondary" sx={{ fontFamily: "Outfit" }}>
                     Serving Size: {item.servingSize}
                   </Typography>
-                 
                 </CardContent>
               </MenuItemCard>
             </Grid>
           ))}
         </Grid>
       </Container>
+
       <Footer />
+
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </>
   );
 };

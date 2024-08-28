@@ -17,6 +17,9 @@ import Menu from "./components/customer/tabs/Menu/Menu";
 import ContactUsPage from "./components/customer/tabs/ContactUs";
 import CompleteVerification from "./components/customer/auth/CompleteVerification";
 import PaymentPage from "./components/customer/payment/Payment";
+import OrdersPage from "./components/customer/tabs/Menu/Orders";
+import ProfileSettings from "./components/customer/tabs/Profile";
+import ResetPassword from "./components/customer/auth/ResetPassword";
 
 function App() {
   return (
@@ -39,6 +42,9 @@ function App() {
         <Route path="/menu" element={<Menu />} />
         <Route path="/contact-us" element={<ContactUsPage />} />
         <Route path="/payment-page" element={<PaymentPage/>} />
+        <Route path="/your-orders" element={<OrdersPage/>} />
+        <Route path="/profile" element={<ProfileSettings/>} />
+        <Route path="/reset-password" element={<ResetPassword/>} />
       </Routes>
     </Router>
   );

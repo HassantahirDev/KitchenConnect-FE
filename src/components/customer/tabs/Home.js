@@ -33,7 +33,7 @@ const isLocationInRange = (lat, lng) => {
 // Styled components for the dialog
 const CustomDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
-    borderRadius: '12px',
+    borderRadius: '30px',
     boxShadow: '0 6px 12px rgba(0, 0, 0, 0.15)',
     padding: '24px',
     backgroundColor: '#ffffff',

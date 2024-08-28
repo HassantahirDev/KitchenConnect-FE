@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Container,
   Box,
@@ -6,14 +6,16 @@ import {
   TextField,
   Button,
   Paper,
+  CircularProgress,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { styled } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
 import CustomerNavbar from "../navbar/CustomerNavbar";
-import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Styled components
 const BackgroundContainer = styled(Box)(({ theme }) => ({
@@ -23,40 +25,39 @@ const BackgroundContainer = styled(Box)(({ theme }) => ({
   alignItems: "center",
   padding: "20px",
   position: "relative",
-  overflow: "hidden", // Prevent horizontal scrolling
+  overflow: "hidden",
 }));
 
 const FormContainer = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
-  width: "100%", // Default width for all screens
+  width: "100%",
   zIndex: 2,
   background: "#fff",
-  marginLeft: "auto", // Center horizontally
-  marginRight: "auto", // Center horizontally
-  [theme.breakpoints.up("lg")]: {
-    width: 400, // Width for large screens
-    marginLeft: 0, // Reset margins for large screens
-    marginRight: 0, // Reset margins for large screens
-  },
-  [theme.breakpoints.between("md", "lg")]: {
-    width: 360, // Width for medium screens
-  },
-  [theme.breakpoints.between("sm", "md")]: {
-    width: 320, // Width for small-medium screens
-  },
+  margin: "auto",
+  [theme.breakpoints.up("lg")]: { width: 400 },
+  [theme.breakpoints.between("md", "lg")]: { width: 360 },
+  [theme.breakpoints.between("sm", "md")]: { width: 320 },
   [theme.breakpoints.down("sm")]: {
     padding: theme.spacing(3),
-    width: 260, // Width for small screens
+    width: 260,
   },
 }));
 
-const StyledButton = styled(Button)(({ theme }) => ({
+const StyledButton = styled(Button)(({ theme, loading }) => ({
   borderRadius: "20px",
   fontFamily: "Outfit, sans-serif",
   textTransform: "none",
-  "&:hover": {
-    backgroundColor: "#d76c2d", // Darker shade for hover effect
-  },
+  backgroundColor: loading ? "#d76c2d" : "#ee8417",
+  "&:hover": { backgroundColor: "#d76c2d" },
+  
+}));
+
+const Loader = styled(CircularProgress)(({ theme }) => ({
+  position: "absolute",
+  right: theme.spacing(2),
+  top: "50%",
+  transform: "translateY(-50%)",
+  color: "#fff",
 }));
 
 const ContentContainer = styled(Box)(({ theme }) => ({
@@ -64,61 +65,34 @@ const ContentContainer = styled(Box)(({ theme }) => ({
   marginRight: theme.spacing(38),
   zIndex: 2,
   color: "#fff",
-  [theme.breakpoints.down("md")]: {
-    display: "none",
-  },
-}));
-
-// New styled component for the circle
-const PatternCircle = styled(Box)(({ theme }) => ({
-  position: "absolute",
-  bottom: 0,
-  right: 0,
-  width: 350, // Adjusted width
-  height: 350, // Adjusted height
-  borderRadius: "50%",
-  border: "50px solid #fff", // Adjusted border thickness
-  background: "transparent",
-  transform: "translate(50%, 50%)", // Adjusted to ensure part of the circle is visible
-  zIndex: 1, // Ensure it is below other content
+  [theme.breakpoints.down("md")]: { display: "none" },
 }));
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [error, setError] = useState("");
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const [loading, setLoading] = useState(false);
+  const { register, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = async (data) => {
     try {
-      setError("");
-      const response = await axios.post(
-        "http://localhost:3000/auth/login",
-        data, // Use the data directly from the form
-        {
-          withCredentials: true, // Ensure cookies are sent
-        }
-      );
-
-      console.log("Response:", response);
-
-      // Fetch the token from the response headers
+      setLoading(true);
+      const response = await axios.post("http://localhost:3000/auth/login", data, {
+        withCredentials: true,
+      });
       const token = response.data.token;
-      console.log("Token:", token);
-      // Store the token in local storage
       localStorage.setItem("token", token);
+      
+      toast.success("Login successful!", {
+        autoClose: 4000,
+      });
 
-      // Redirect to the dashboard or another protected route
       navigate("/menu");
     } catch (err) {
-      if (err.response && err.response.data) {
-        setError(err.response.data.message);
-      } else {
-        setError("An unexpected error occurred");
-      }
+      toast.error(err.response?.data?.message || "An unexpected error occurred", {
+        autoClose: 4000,
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -186,12 +160,7 @@ const LoginPage = () => {
               <Typography
                 variant="h4"
                 align="center"
-                sx={{
-                  mb: 3,
-                  fontFamily: "Outfit, sans-serif",
-                  fontWeight: 700,
-                  color: "#333",
-                }}
+                sx={{ mb: 3, fontFamily: "Outfit, sans-serif", fontWeight: 700, color: "#333" }}
               >
                 Login
               </Typography>
@@ -199,7 +168,7 @@ const LoginPage = () => {
                 component="form"
                 noValidate
                 autoComplete="off"
-                onSubmit={handleSubmit(onSubmit)} // Use handleSubmit with onSubmit function
+                onSubmit={handleSubmit(onSubmit)}
                 sx={{ display: "flex", flexDirection: "column" }}
               >
                 <TextField
@@ -215,18 +184,6 @@ const LoginPage = () => {
                       message: "Invalid email address",
                     },
                   })}
-                  InputProps={{
-                    sx: {
-                      fontFamily: "Outfit, sans-serif",
-                      fontSize: "1rem",
-                    },
-                  }}
-                  InputLabelProps={{
-                    sx: {
-                      fontFamily: "Outfit, sans-serif",
-                      fontSize: "1rem",
-                    },
-                  }}
                   error={!!errors.email}
                   helperText={errors.email?.message}
                 />
@@ -244,18 +201,6 @@ const LoginPage = () => {
                       message: "Password must be at least 6 characters long",
                     },
                   })}
-                  InputProps={{
-                    sx: {
-                      fontFamily: "Outfit, sans-serif",
-                      fontSize: "1rem",
-                    },
-                  }}
-                  InputLabelProps={{
-                    sx: {
-                      fontFamily: "Outfit, sans-serif",
-                      fontSize: "1rem",
-                    },
-                  }}
                   error={!!errors.password}
                   helperText={errors.password?.message}
                 />
@@ -263,21 +208,16 @@ const LoginPage = () => {
                   type="submit"
                   variant="contained"
                   color="secondary"
-                  sx={{
-                    backgroundColor: "#ee8417",
-                    mt: 3,
-                    mb: 2,
-                    fontWeight: "bold",
-                  }}
+                  loading={loading}
+                  sx={{ mt: 3, mb: 2, fontWeight: "bold"}}
                 >
-                  Login
+                  
+                  {loading ? "Signing In..." : "Sign In"} 
                 </StyledButton>
                 <StyledButton
                   variant="outlined"
                   color="inherit"
-                  sx={{
-                    mb: 2,
-                  }}
+                  sx={{ mb: 2 }}
                 >
                   Sign Up
                 </StyledButton>
@@ -285,28 +225,10 @@ const LoginPage = () => {
             </FormContainer>
           </motion.div>
         </Container>
-        {/* Add the PatternCircle component */}
-        {/* <PatternCircle /> */}
       </BackgroundContainer>
+      <ToastContainer />
     </>
   );
 };
 
 export default LoginPage;
-
-
-
-
-// const toggleDrawer = (open) => (event) => {
-//     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-//       return;
-//     }
-//     setDrawerOpen(open);
-//   };
-
-//   <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
-//                 <Sidebar
-//                   selected=""
-//                   onClick={() => setDrawerOpen(false)}
-//                 />
-//               </Drawer>

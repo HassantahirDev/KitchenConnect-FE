@@ -1,55 +1,45 @@
 import React, { useState, useEffect } from "react";
-import { Container, Box, Typography, Avatar, TextField, Button, Grid, CircularProgress, Switch, FormControlLabel, Paper, IconButton } from "@mui/material";
+import {
+  Container,
+  Box,
+  Typography,
+  Avatar,
+  TextField,
+  Button,
+  Grid,
+  CircularProgress,
+  Switch,
+  FormControlLabel,
+  Paper,
+  IconButton,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import axios from "axios";
-import { CameraAlt, Lock, Cancel, Autorenew } from "@mui/icons-material";
+import { CameraAlt, Lock, Cancel } from "@mui/icons-material";
 import CustomerNavbar from "../navbar/CustomerNavbar";
 import { useNavigate } from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
 
 // Styled components
 const BackgroundContainer = styled(Box)(({ theme }) => ({
-    [theme.breakpoints.up("lg")]: {
-        marginTop: 80,
-       
-      },
-      [theme.breakpoints.between("md", "lg")]: {
-        marginTop: 65,
-      },
-      [theme.breakpoints.between("sm", "md")]: {
-        marginTop: 55,
-      },
-      [theme.breakpoints.down("sm")]: {
-        marginTop: 55,
-      },
-    
   background: "linear-gradient(to right, #000, #ee8417)",
   minHeight: "100vh",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   padding: "20px",
-  position: "relative",
+  marginTop: theme.breakpoints.down("sm") ? 55 : 80,
 }));
 
 const ProfileContainer = styled(Paper)(({ theme }) => ({
-    marginTop: 60,
+  marginTop: 60,
   padding: theme.spacing(4),
-  width: "100%", // Default width for all screens
+  width: "100%",
   background: "#fff",
-  [theme.breakpoints.up("lg")]: {
-    width: 400,
-  },
-  [theme.breakpoints.between("md", "lg")]: {
-    width: 360,
-  },
-  [theme.breakpoints.between("sm", "md")]: {
-    width: 320,
-  },
-  [theme.breakpoints.down("sm")]: {
-    width: 260,
-    padding: theme.spacing(3),
-  },
+  [theme.breakpoints.up("lg")]: { width: 400 },
+  [theme.breakpoints.between("md", "lg")]: { width: 360 },
+  [theme.breakpoints.between("sm", "md")]: { width: 320 },
+  [theme.breakpoints.down("sm")]: { width: 260, padding: theme.spacing(3) },
 }));
 
 const AvatarContainer = styled(Box)({
@@ -61,12 +51,7 @@ const AvatarContainer = styled(Box)({
 
 const InputField = styled(TextField)({
   marginBottom: "1rem",
-  "& .MuiInputBase-input": {
-    fontFamily: "Outfit, sans-serif",
-  },
-  "& .MuiInputLabel-root": {
-    fontFamily: "Outfit, sans-serif",
-  },
+  "& .MuiInputBase-input, .MuiInputLabel-root": { fontFamily: "Outfit, sans-serif" },
 });
 
 const SaveButton = styled(Button)(({ theme }) => ({
@@ -76,9 +61,7 @@ const SaveButton = styled(Button)(({ theme }) => ({
   fontWeight: "bold",
   textTransform: "none",
   backgroundColor: "#ee8417",
-  "&:hover": {
-    backgroundColor: "#d76c2d",
-  },
+  "&:hover": { backgroundColor: "#d76c2d" },
 }));
 
 const CircularProgressWrapper = styled(Box)({
@@ -103,8 +86,7 @@ const ProfileSettings = () => {
       try {
         const token = localStorage.getItem("token");
         if (token) {
-          const decodedToken = jwtDecode(token);
-          const userId = decodedToken.userId;
+          const { userId } = jwtDecode(token);
           const response = await axios.get(`http://localhost:3000/users/${userId}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
@@ -120,66 +102,71 @@ const ProfileSettings = () => {
     fetchUserData();
   }, []);
 
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
-  };
+  const handleFileChange = (event) => setSelectedFile(event.target.files[0]);
 
   const handleAvatarUpload = async () => {
-    if (selectedFile) {
-      setUploading(true);
-      const formData = new FormData();
-      formData.append("avatar", selectedFile);
+    if (!selectedFile) return;
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("avatar", selectedFile);
 
-      try {
-        const token = localStorage.getItem("token");
-        await axios.post("http://localhost:3000/users/me/avatar", formData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        const response = await axios.get("http://localhost:3000/users/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUser(response.data);
-        setSelectedFile(null);
-      } catch (error) {
-        console.error("Error uploading avatar:", error);
-      } finally {
-        setUploading(false);
-      }
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post("http://localhost:3000/users/me/avatar", formData, {
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
+      });
+      const response = await axios.get("http://localhost:3000/users/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUser(response.data);
+      setSelectedFile(null);
+    } catch (error) {
+      console.error("Error uploading avatar:", error);
+    } finally {
+      setUploading(false);
     }
   };
 
   const handleSaveChanges = async () => {
     try {
       const token = localStorage.getItem("token");
-      await axios.put("http://localhost:3000/users/me", user, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      if (!token) throw new Error("No token found");
+  
+      // Decode the token to get user ID
+      const { userId } = jwtDecode(token);
+  
+      // Prepare the data to send to the server
+      const updateUserSettings = {
+        name: user.name,
+        email: user.email,
+        profilePicture: user.profilePicture, // Assuming avatar is the profile picture
+      };
+  
+      // Make the API request to update user settings
+      await axios.post(
+        "http://localhost:3000/users/update-settings",
+        updateUserSettings,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
       alert("Profile updated successfully!");
     } catch (error) {
       console.error("Error updating profile:", error);
+      alert("Failed to update profile.");
     }
   };
-
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
-
-  const handlePasswordReset = () => {
-    navigate("/reset-password");
-  };
+  const handlePasswordReset = () => navigate("/reset-password");
 
   const handleAutoRenewToggle = async (event) => {
-    setUser({ ...user, autoRenew: event.target.checked });
+    const newAutoRenew = event.target.checked;
+    setUser({ ...user, autoRenew: newAutoRenew });
     try {
       const token = localStorage.getItem("token");
-      await axios.put("http://localhost:3000/users/me/auto-renew", { autoRenew: event.target.checked }, {
+      await axios.put("http://localhost:3000/users/me/auto-renew", { autoRenew: newAutoRenew }, {
         headers: { Authorization: `Bearer ${token}` },
       });
     } catch (error) {
@@ -201,13 +188,11 @@ const ProfileSettings = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <CircularProgressWrapper>
-        <CircularProgress />
-      </CircularProgressWrapper>
-    );
-  }
+  if (loading) return (
+    <CircularProgressWrapper>
+      <CircularProgress />
+    </CircularProgressWrapper>
+  );
 
   return (
     <>
@@ -263,7 +248,7 @@ const ProfileSettings = () => {
                   label="Email"
                   variant="outlined"
                   value={user.email}
-                  onChange={(e) => setUser({ ...user, email: e.target.value })}
+                  disabled
                 />
               </Grid>
             </Grid>

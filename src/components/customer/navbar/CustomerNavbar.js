@@ -204,11 +204,11 @@ const CustomerNavbar = () => {
               {isAuthenticated ? (
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                   <Avatar
-                    src={user.avatar || ""}
+                    src={user.profilePicture || ""}
                     onClick={(e) => setProfileAnchor(e.currentTarget)}
                     sx={{
-                      backgroundColor: user.avatar ? "transparent" : "#fff",
-                      color: user.avatar ? "transparent" : "#000",
+                      backgroundColor: user.profilePicture ? "transparent" : "#fff",
+                      color: user.profilePicture ? "transparent" : "#000",
                       cursor: "pointer",
                       borderRadius: "50%",
                       width: 40,
@@ -220,7 +220,7 @@ const CustomerNavbar = () => {
                       justifyContent: "center",
                     }}
                   >
-                    {!user.avatar && user.name.charAt(0).toUpperCase()}
+                    {!user.profilePicture && user.name.charAt(0).toUpperCase()}
                   </Avatar>
                   <StyledMenu
                     anchorEl={profileAnchor}

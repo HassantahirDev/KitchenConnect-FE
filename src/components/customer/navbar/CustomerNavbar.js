@@ -110,7 +110,9 @@ const CustomerNavbar = () => {
           >
             <Typography
               variant="h6"
-              sx={{ fontFamily: "Outfit", fontWeight: 700 }}
+              component={Link} 
+              to="/"
+              sx={{ fontFamily: "Outfit", fontWeight: 700, textDecoration: "none", color: "white" }}
             >
               <Hidden lgUp>
                 <Drawer

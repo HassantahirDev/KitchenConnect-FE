@@ -73,7 +73,7 @@ const CircularProgressWrapper = styled(Box)({
 });
 
 const ProfileSettings = () => {
-  const [user, setUser] = useState({ name: "", email: "", avatar: "", autoRenew: false });
+  const [user, setUser] = useState({ name: "", email: "", profilePicture: "", autoRenew: false });
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -201,10 +201,10 @@ const ProfileSettings = () => {
         <ProfileContainer elevation={3}>
           <AvatarContainer>
             <Avatar
-              src={user.avatar || ""}
+              src={user.profilePicture || ""}
               sx={{ width: 100, height: 100, mb: 2 }}
             >
-              {!user.avatar && user.name.charAt(0).toUpperCase()}
+              {!user.profilePicture && user.name.charAt(0).toUpperCase()}
             </Avatar>
             <input
               type="file"

@@ -178,7 +178,7 @@ const OrdersPage = () => {
                       <CardMedia component="img" height="180" image={order.dailyMenu.picture} alt={order.dailyMenu.name} />
                       <Typography variant="body1" sx={{ fontFamily: "Outfit" }}>{order.dailyMenu.name}</Typography>
                       <Typography variant="body2" sx={{ fontFamily: "Outfit", color: "gray" }}>
-                        {index === 2 ? `Delivered on ${new Date(order.delivery.updatedAt || order.dailyMenu.date).toLocaleDateString()}` : `Delivering ${index === 0 ? "today" : `on ${new Date(order.dailyMenu.date).toLocaleDateString()}`}`}
+                        {index === 2 ? `Delivered on ${new Date(order.dailyMenu.date || order.dailyMenu.date).toLocaleDateString()}` : `Delivering ${index === 0 ? "today" : `on ${new Date(order.dailyMenu.date).toLocaleDateString()}`}`}
                       </Typography>
                       {section.rating && (
                         <CardContent>

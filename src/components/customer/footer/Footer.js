@@ -101,7 +101,7 @@ const Footer = () => {
       </Box>
 
       <Typography sx={{ mt: 4, fontSize: "0.875rem", fontFamily: "Outfit" }}>
-        © 2024 KitchenConnect. All rights reserved.
+        © 2024 Dana Pani. All rights reserved.
       </Typography>
     </Box>
   );

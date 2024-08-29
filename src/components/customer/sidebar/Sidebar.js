@@ -110,7 +110,7 @@ const Sidebar = ({ selected, onClick }) => {
           variant="outlined"
           color="inherit"
           component={Link}
-          to="/registration"
+          to="/register"
           sx={{
             width: "100%",
             color: "#FFFFFF",

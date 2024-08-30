@@ -20,6 +20,8 @@ import PaymentPage from "./components/customer/payment/Payment";
 import OrdersPage from "./components/customer/tabs/Menu/Orders";
 import ProfileSettings from "./components/customer/tabs/Profile";
 import ResetPassword from "./components/customer/auth/ResetPassword";
+import ForgotPasswordPage from "./components/customer/auth/ForgotPassword";
+import ResetPasswordPage from "./components/customer/auth/ResetForgottenPassword";
 
 function App() {
   return (
@@ -45,6 +47,8 @@ function App() {
         <Route path="/your-orders" element={<OrdersPage/>} />
         <Route path="/profile" element={<ProfileSettings/>} />
         <Route path="/reset-password" element={<ResetPassword/>} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage/>} />
+        <Route path="/reset-forgotten-password/:token" element={<ResetPasswordPage />} />
       </Routes>
     </Router>
   );

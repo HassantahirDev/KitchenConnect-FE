@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Container,
   Box,
@@ -317,6 +317,8 @@ const SignUpPage = () => {
                 <StyledButton
                   variant="outlined"
                   color="inherit"
+                  component={Link} 
+                  to = "/login"
                   sx={{ mb: 2 }}
                 >
                   Login

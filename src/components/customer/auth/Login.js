@@ -13,7 +13,7 @@ import { styled } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
 import CustomerNavbar from "../navbar/CustomerNavbar";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -43,13 +43,13 @@ const FormContainer = styled(Paper)(({ theme }) => ({
   },
 }));
 
-const StyledButton = styled(Button)(({ theme, loading }) => ({
+const StyledButton = styled(Button)(({ theme }) => ({
   borderRadius: "20px",
   fontFamily: "Outfit, sans-serif",
   textTransform: "none",
-  backgroundColor: loading ? "#d76c2d" : "#ee8417",
-  "&:hover": { backgroundColor: "#d76c2d" },
-  
+  "&:hover": {
+    backgroundColor: "#d76c2d",
+  },
 }));
 
 const Loader = styled(CircularProgress)(({ theme }) => ({
@@ -204,24 +204,35 @@ const LoginPage = () => {
                   error={!!errors.password}
                   helperText={errors.password?.message}
                 />
-                <StyledButton
+                 <StyledButton
                   type="submit"
                   variant="contained"
                   color="secondary"
-                  loading={loading}
-                  sx={{ mt: 3, mb: 2, fontWeight: "bold"}}
+                  sx={{ backgroundColor: "#ee8417", mt: 3, mb: 2, fontWeight: "bold" }}
+                  disabled={loading}
                 >
-                  
-                  {loading ? "Signing In..." : "Sign In"} 
+                  {loading ? "Signing In..." : "Sign In"}
                 </StyledButton>
                 <StyledButton
                   variant="outlined"
                   color="inherit"
+                  component={Link}
+                  to="/register"
                   sx={{ mb: 2 }}
                 >
                   Sign Up
                 </StyledButton>
               </Box>
+              <Typography align="center" sx={{ mt: 2 }}>
+  <Button
+    variant="text"
+    color="primary"
+    onClick={() => navigate('/forgot-password')}
+    sx={{ textTransform: 'none', fontFamily: "Outfit, sans-serif" }}
+  >
+    Forgot Password?
+  </Button>
+</Typography>
             </FormContainer>
           </motion.div>
         </Container>

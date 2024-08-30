@@ -269,17 +269,7 @@ const ProfileSettings = () => {
             >
               Reset Password
             </Button>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={user.autoRenew}
-                  onChange={handleAutoRenewToggle}
-                  color="primary"
-                />
-              }
-              label="Auto-Renew Subscription"
-              sx={{ marginTop: "1rem" }}
-            />
+            
             <Button
               variant="outlined"
               color="error"

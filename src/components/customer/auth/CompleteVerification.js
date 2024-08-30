@@ -70,24 +70,24 @@ const ContentContainer = styled(Box)(({ theme }) => ({
 }));
 
 // New styled component for the circle
-const PatternCircle = styled(Box)(({ theme }) => ({
-  position: "absolute",
-  bottom: 0,
-  right: 0,
-  width: 350, // Adjusted width
-  height: 350, // Adjusted height
-  borderRadius: "50%",
-  border: "50px solid #fff", // Adjusted border thickness
-  background: "transparent",
-  transform: "translate(50%, 50%)", // Adjusted to ensure part of the circle is visible
-  zIndex: 1, // Ensure it is below other content
-}));
+// const PatternCircle = styled(Box)(({ theme }) => ({
+//   position: "absolute",
+//   bottom: 0,
+//   right: 0,
+//   width: 350, // Adjusted width
+//   height: 350, // Adjusted height
+//   borderRadius: "50%",
+//   border: "50px solid #fff", // Adjusted border thickness
+//   background: "transparent",
+//   transform: "translate(50%, 50%)", // Adjusted to ensure part of the circle is visible
+//   zIndex: 1, // Ensure it is below other content
+// }));
 
 const CompleteVerification = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const {  email } = location.state || {}; 
-  const [error, setError] = useState("");
+  const [, setError] = useState("");
   const {
     register,
     handleSubmit,

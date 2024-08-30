@@ -6,7 +6,6 @@ import {
   TextField,
   Button,
   Paper,
-  CircularProgress,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { styled } from "@mui/material/styles";
@@ -52,13 +51,13 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const Loader = styled(CircularProgress)(({ theme }) => ({
-  position: "absolute",
-  right: theme.spacing(2),
-  top: "50%",
-  transform: "translateY(-50%)",
-  color: "#fff",
-}));
+// const Loader = styled(CircularProgress)(({ theme }) => ({
+//   position: "absolute",
+//   right: theme.spacing(2),
+//   top: "50%",
+//   transform: "translateY(-50%)",
+//   color: "#fff",
+// }));
 
 const ContentContainer = styled(Box)(({ theme }) => ({
   flexDirection: "column",

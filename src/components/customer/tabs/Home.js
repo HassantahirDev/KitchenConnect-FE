@@ -64,7 +64,7 @@ const DialogActionsStyled = styled(DialogActions)(({ theme }) => ({
 const LandingPage = () => {
   const [openPopup, setOpenPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
-  const [locationStatus, setLocationStatus] = useState(null);
+  const [, setLocationStatus] = useState(null);
 
   useEffect(() => {
     const getUserLocation = () => {

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Container,
   Box,
   Typography,
   Avatar,
@@ -8,14 +7,12 @@ import {
   Button,
   Grid,
   CircularProgress,
-  Switch,
-  FormControlLabel,
   Paper,
   IconButton,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import axios from "axios";
-import { CameraAlt, Lock, Cancel } from "@mui/icons-material";
+import { CameraAlt, Lock } from "@mui/icons-material";
 import CustomerNavbar from "../navbar/CustomerNavbar";
 import { useNavigate } from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
@@ -77,7 +74,7 @@ const ProfileSettings = () => {
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [openDialog, setOpenDialog] = useState(false);
+  //const [openDialog, setOpenDialog] = useState(false);
 
   const navigate = useNavigate();
 
@@ -133,7 +130,7 @@ const ProfileSettings = () => {
       if (!token) throw new Error("No token found");
   
       // Decode the token to get user ID
-      const { userId } = jwtDecode(token);
+      // const { userId } = jwtDecode(token);
   
       // Prepare the data to send to the server
       const updateUserSettings = {
@@ -161,32 +158,32 @@ const ProfileSettings = () => {
   };
   const handlePasswordReset = () => navigate("/reset-password");
 
-  const handleAutoRenewToggle = async (event) => {
-    const newAutoRenew = event.target.checked;
-    setUser({ ...user, autoRenew: newAutoRenew });
-    try {
-      const token = localStorage.getItem("token");
-      await axios.put("http://localhost:3000/users/me/auto-renew", { autoRenew: newAutoRenew }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-    } catch (error) {
-      console.error("Error updating auto-renew subscription:", error);
-      alert("Failed to update auto-renew subscription.");
-    }
-  };
+  // const handleAutoRenewToggle = async (event) => {
+  //   const newAutoRenew = event.target.checked;
+  //   setUser({ ...user, autoRenew: newAutoRenew });
+  //   try {
+  //     const token = localStorage.getItem("token");
+  //     await axios.put("http://localhost:3000/users/me/auto-renew", { autoRenew: newAutoRenew }, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     });
+  //   } catch (error) {
+  //     console.error("Error updating auto-renew subscription:", error);
+  //     alert("Failed to update auto-renew subscription.");
+  //   }
+  // };
 
-  const handleCancelSubscription = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      await axios.post("http://localhost:3000/users/me/cancel-subscription", {}, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      alert("Subscription cancelled successfully.");
-    } catch (error) {
-      console.error("Error cancelling subscription:", error);
-      alert("Failed to cancel subscription.");
-    }
-  };
+  // const handleCancelSubscription = async () => {
+  //   try {
+  //     const token = localStorage.getItem("token");
+  //     await axios.post("http://localhost:3000/users/me/cancel-subscription", {}, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     });
+  //     alert("Subscription cancelled successfully.");
+  //   } catch (error) {
+  //     console.error("Error cancelling subscription:", error);
+  //     alert("Failed to cancel subscription.");
+  //   }
+  // };
 
   if (loading) return (
     <CircularProgressWrapper>
@@ -268,17 +265,6 @@ const ProfileSettings = () => {
               sx={{ marginTop: "1rem", borderRadius: "20px" }}
             >
               Reset Password
-            </Button>
-            
-            <Button
-              variant="outlined"
-              color="error"
-              fullWidth
-              startIcon={<Cancel />}
-              onClick={handleCancelSubscription}
-              sx={{ marginTop: "1rem", borderRadius: "20px" }}
-            >
-              Cancel Subscription
             </Button>
           </Box>
         </ProfileContainer>

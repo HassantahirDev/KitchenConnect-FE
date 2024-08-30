@@ -7,7 +7,6 @@ import {
   Card,
   CardContent,
   CardMedia,
-  Button,
   Select,
   MenuItem,
   InputLabel,
@@ -69,7 +68,7 @@ const WeekSelect = styled(Select)(({ theme }) => ({
 }));
 
 const Menu = () => {
-  const [location, setLocation] = useState("TDC, Johar Town Lahore");
+  const [location] = useState("TDC, Johar Town Lahore");
   const [menuItems, setMenuItems] = useState([]);
   const [currentWeek, setCurrentWeek] = useState(1);
   const [loading, setLoading] = useState(true);
